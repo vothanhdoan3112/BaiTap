@@ -1,0 +1,16 @@
+{
+  "name": "bai1",
+  "version": "0.0.1",
+  "private": "true",
+  "description": "bai1",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.769.0",
+    "express": "*",
+    "socket.io": "*",
+    "socketio-file-upload": "*"
+  }
+}

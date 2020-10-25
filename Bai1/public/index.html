@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Quản lý sinh viên</title>
+
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round|Open+Sans">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <script src="js/custom.js"></script>
+
+</head>
+
+<body onload="refreshTable()">
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="#"><i class="fa fa-user-circle" aria-hidden="true"></i> QUẢN LÝ SINH
+                    VIÊN</a>
+            </div>
+
+        </div>
+    </nav>
+    <div class="container-fluid al">
+        <div id="clock"></div>
+        <Br>
+        <p><b>TÌM KIẾM SINH VIÊN:</b></p><Br><Br>
+        <div class="search-input">
+            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Nhập tên sinh viên cần tìm..."
+                data-toggle="tooltip" data-placement="bottom" title="TÌM KIẾM SINH VIÊN">
+            <!-- <i class="fa fa-search" aria-hidden="true"></i> -->
+        </div>
+
+
+        <b>CHỨC NĂNG CHÍNH:</b><Br>
+        <div style="display: inline-block;">
+            <div style="width: 100px; height: 30px; float: left;" data-toggle="tooltip" data-placement="top" title="Thêm Sinh Viên">
+                <button class="nv btn" type="button" data-placement="top" data-toggle="modal"
+                    data-target="#ModalForm"><i class="fa fa-user-plus"></i></button></div>
+            
+            <button class="nv" type="button" onclick="delRow()" data-toggle="tooltip" data-placement="top" title="Sắp xếp"><i class="fa fa-filter" 
+                    aria-hidden="true"></i></button>
+        </div>
+        
+        <table style="margin-top: 3%;" class="table table-bordered" id="myTable">
+            <thead>
+                <tr class="ex">
+                    <th width="auto">Mã Sinh Viên</th>
+                    <th width="auto">Tên Sinh Viên</th>
+                    <th>Năm sinh</th>
+                    <th>Avata</th>
+                    <th width="5px; !important">Tính Năng</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- data de trong nay-->
+
+            </tbody>
+        </table>
+        <!-- <div id="pageNavPosition" class="text-right"></div>
+        <script type="text/javascript">
+            var pager = new Pager('myTable', 5);
+            pager.init();
+            pager.showPageNav('pager', 'pageNavPosition');
+            pager.showPage(1);
+        </script> -->
+    </div>
+
+
+
+
+
+
+    <div id="ModalForm" class="modal fade">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title">Thêm Sinh Viên</h1>
+                </div>
+                <div class="modal-body">
+                    <form id="fr-add" role="form">
+
+                        <div class="form-group">
+                            <label class="control-label">Mã sinh viên</label>
+                            <div>
+                                <input type="text" class="form-control input-lg" name="maSinhVien" id="maSinhVien">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Họ tên</label>
+                            <div>
+                                <input type="text" class="form-control input-lg" name="tenSinhVien" id="tenSinhVien">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Năm sinh</label>
+                            <div>
+                                <input type="date" class="form-control input-lg" name="namSinh" id="namSinh">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Ảnh đại diện</label>
+                            <div style="display: inline-block;">
+                                <input type="file" class="form-control input-lg"
+                                    style="width:50%; float: left; margin-top:7%;" name="avata" id="avata"
+                                    accept="image/*" onchange="PreviewImage()">
+                                <img id="preview" src="images/avata.png"
+                                    style="width: 100px; height: 100px; margin-left: 13%;" alt="your avata" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div>
+                                <button type="button" id="addNewStudent" class="btn btn-success">Thêm</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div id="ModalEditForm" class="modal fade">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title">Cập Nhật Thông Tin</h1>
+                </div>
+                <div class="modal-body">
+                    <form id="fr-edit" role="form">
+
+                        <div class="form-group">
+                            <label class="control-label">Mã sinh viên</label>
+                            <div>
+                                <input type="text" class="form-control input-lg" name="maSinhVienE" id="maSinhVienE"
+                                    readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Họ tên</label>
+                            <div>
+                                <input type="text" class="form-control input-lg" name="tenSinhVienE" id="tenSinhVienE">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Năm sinh</label>
+                            <div>
+                                <input type="date" class="form-control input-lg" name="namSinhE" id="namSinhE">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Ảnh đại diện</label>
+                            <div style="display: inline-block;">
+                                <input type="file" class="form-control input-lg"
+                                    style="width:50%; float: left; margin-top:7%;" name="avataE" id="avataE"
+                                    accept="image/*" onchange="PreviewImageE()">
+                                <img id="previewE" src="images/avata.png"
+                                    style="width: 100px; height: 100px; margin-left: 13%;" alt="your avata" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div>
+                                <button type="button" id="editStudent" class="btn btn-success">Lưu</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</body>
+
+</html>
